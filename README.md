@@ -6,4 +6,11 @@ Homework0
 ![alt text](MarkdownPicture/Snipaste_2026-09-29_19-21-41.png)
 
 Homework1
+
 26/9/30 - accomplish Model Matrix Part (rotate around z-axis)
+
+26/10/01 - complete homework1 (projection matrix + rotate around more axis)
+
+![alt text](MarkdownPicture/Oct01-3-z2.gif)
+![alt text](MarkdownPicture/Oct01-1-x.gif)
+![alt text](MarkdownPicture/Oct01-2-y.gif)
