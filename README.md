@@ -14,3 +14,7 @@ Homework1
 ![alt text](MarkdownPicture/Oct01-3-z2.gif)
 ![alt text](MarkdownPicture/Oct01-1-x.gif)
 ![alt text](MarkdownPicture/Oct01-2-y.gif)
+
+Homework2
+
+26/10/2 - accomplish rasterize_Triangle function without check
