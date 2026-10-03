@@ -131,18 +131,20 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
     {
         for(int j = std::floor(minX); j <= std::ceil(maxX); j++)
         {
-            Eigen::Vector2 posScreen(j+0.5f, i+0.5f);
+            Eigen::Vector2f posScreen(j+0.5f, i+0.5f);
             if(DotInTriangle(posScreen, v))
             {
-                auto[alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
+                auto[alpha, beta, gamma] = computeBarycentric2D(j+0.5f, i+0.5f, t.v);
                 float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
-    q           float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+                float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
                 z_interpolated *= w_reciprocal;
 
-                if(Buffers::Depth > z_interpolated)
+                int index = get_index(j, i);
+                float depth = depth_buf[index];
+                if(depth > z_interpolated)
                 {
-                    Buffers.Depth = z_interpolated;
-                    set_pixel(Eigen::Vector3f pos(j, i), Eigen::Vector3f color(getColor()));
+                    depth = z_interpolated;
+                    set_pixel(Eigen::Vector3f(j, i, 1.0f), t.getColor());
                 }
             }
         }
@@ -153,16 +155,20 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 }
 
 //判断点是否在三角形内
-bool DotInTriangle(Eigen::Vector2f pos, std::array<Eigen::Vector4f, 3> v)
+bool rst::rasterizer::DotInTriangle(Eigen::Vector2f pos, std::array<Eigen::Vector4f, 3> v)
 {
     //获取三条边
     Eigen::Vector2f AB = v[1].head<2>() - v[0].head<2>();
     Eigen::Vector2f BC = v[2].head<2>() - v[1].head<2>();
     Eigen::Vector2f CA = v[0].head<2>() - v[2].head<2>();
 
-    float c1 = AB.cross(pos);
-    float c2 = BC.cross(pos);
-    float c2 = CA.cross(pos);
+    Eigen::Vector2f AO = pos - v[0].head<2>();
+    Eigen::Vector2f BO = pos - v[1].head<2>();
+    Eigen::Vector2f CO = pos - v[2].head<2>();
+
+    float c1 = AB.x() * AO.y() - AB.y() * AO.x();
+    float c2 = BC.x() * BO.y() - BC.y() * BO.x();
+    float c3 = CA.x() * CO.y() - CA.y() * CO.x();
 
     return (c1 > 0 && c2 > 0 && c3 > 0) || (c1 < 0 && c2 < 0 && c3 < 0);
 

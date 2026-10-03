@@ -18,3 +18,5 @@ Homework1
 Homework2
 
 26/10/2 - accomplish rasterize_Triangle function without check
+
+26/10/3 - fixed some bugs
